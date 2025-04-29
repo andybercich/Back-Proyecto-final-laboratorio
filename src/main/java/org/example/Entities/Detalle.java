@@ -4,10 +4,7 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 
 import java.util.ArrayList;
@@ -38,6 +35,7 @@ public class Detalle extends Base{
     @NotNull(message = "Debes ingresar un producto valido para el detalle")
     private Producto producto;
 
+    @Builder.Default
     @OneToMany(mappedBy = "detalle", orphanRemoval = true)
     private List<Imagen> imagenList = new ArrayList<>();
 

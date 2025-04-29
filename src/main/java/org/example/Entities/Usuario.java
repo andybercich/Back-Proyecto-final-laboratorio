@@ -1,10 +1,7 @@
 package org.example.Entities;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.SuperBuilder;
 import org.example.Entities.Enum.TipoUsuario;
 
@@ -30,6 +27,7 @@ public class Usuario extends Base{
 
     private String mail;
 
+    @Builder.Default
     @ManyToMany(mappedBy = "usuarios")
     private ArrayList<Direccion> direcciones = new ArrayList<>();
 
