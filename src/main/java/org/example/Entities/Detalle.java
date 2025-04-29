@@ -45,4 +45,5 @@ public class Detalle extends Base{
     @Min(value = 0, message = "El valor minimo del stock producto es 0(cero)")
     private int stock;
 
+
 }
