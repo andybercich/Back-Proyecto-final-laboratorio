@@ -1,6 +1,7 @@
 package org.example.Services;
 
 
+import org.example.Entities.Base;
 import org.example.Repositories.BaseRepository;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,7 +16,7 @@ import java.util.Optional;
 
 @Service
 @Transactional
-public abstract class BaseService<T, ID, Repo extends BaseRepository<T,ID>>{
+public abstract class BaseService<T extends Base, ID, Repo extends BaseRepository<T,ID>>{
 
     @Autowired
     protected Repo repository;
@@ -81,10 +82,13 @@ public abstract class BaseService<T, ID, Repo extends BaseRepository<T,ID>>{
         return existingEntity;
     }
 
-    public boolean deleteById(ID id) throws Exception {
+    public T deleteById(ID id) throws Exception {
         try {
-            repository.deleteById(id);
-            return true;
+            T existingEntity = repository.findById(id)
+                    .orElseThrow(() -> new Exception("Entity not found"));
+            existingEntity.setEstado(false);
+            ;
+            return existingEntity;
         }catch (Exception e){
             throw new Exception(e.getMessage());
         }
