@@ -1,6 +1,7 @@
 package org.example.Entities;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -19,17 +20,18 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class Imagen extends Base{
 
-    @Column(length = 600)
+    @Column()
     @NotNull(message = "Ingresa una url valida de la imagen")
     @NotBlank(message = "Ingresa una url valida de la imagen")
     private String url;
 
-    @Column(length = 100)
+    @Column()
     private String alt;
 
     @ManyToOne
     @NotNull(message = "Ingresa un detalle valido para la imagen")
     @JoinColumn(name = "detalle_id")
+    @JsonBackReference
     private Detalle detalle;
 
 }

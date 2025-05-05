@@ -6,6 +6,7 @@ import lombok.experimental.SuperBuilder;
 import org.example.Entities.Enum.TipoUsuario;
 
 import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Usuario")
@@ -29,6 +30,6 @@ public class Usuario extends Base{
 
     @Builder.Default
     @ManyToMany(mappedBy = "usuarios")
-    private ArrayList<Direccion> direcciones = new ArrayList<>();
+    private List<Direccion> direcciones = new ArrayList<>();
 
 }

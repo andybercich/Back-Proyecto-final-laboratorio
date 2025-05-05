@@ -1,5 +1,6 @@
 package org.example.Entities;
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
@@ -37,10 +38,12 @@ public class Detalle extends Base{
 
     @Builder.Default
     @OneToMany(mappedBy = "detalle", orphanRemoval = true)
+    @JsonManagedReference
     private List<Imagen> imagenList = new ArrayList<>();
 
     @NotNull(message = "Ingresa un stock para el producto")
     @Min(value = 0, message = "El valor minimo del stock producto es 0(cero)")
     private int stock;
+
 
 }

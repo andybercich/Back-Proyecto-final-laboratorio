@@ -25,13 +25,14 @@ public class Precio extends Base{
     @JoinColumn(name = "descuento_id")
     private Descuento descuento;
 
-
     private BigDecimal precioCompra;
 
     @NotNull(message = "Ingresa un precio venta del producto")
     private BigDecimal precioVenta;
 
+    @OneToOne
     @NotNull(message = "Ingresa un detalle valido")
+    @JoinColumn(name = "detalle_id")
     private Detalle detalle;
 
 }
