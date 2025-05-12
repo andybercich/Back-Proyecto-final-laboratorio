@@ -1,6 +1,7 @@
 package org.example.Controllers;
 
 import jakarta.validation.Valid;
+import org.example.Entities.Base;
 import org.example.Repositories.BaseRepository;
 import org.example.Services.BaseService;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +12,7 @@ import java.util.List;
 
 @Validated
 @CrossOrigin(origins = "*")
-public abstract class BaseController<T, ID, Repo extends BaseRepository<T,ID> ,
+public abstract class BaseController<T extends Base, ID, Repo extends BaseRepository<T,ID> ,
         Service extends BaseService<T, ID, Repo > > {
 
     protected final Service service;
@@ -67,15 +68,15 @@ public abstract class BaseController<T, ID, Repo extends BaseRepository<T,ID> ,
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete(@PathVariable ID id) {
+    public ResponseEntity<T> delete(@PathVariable ID id) {
         try {
-            boolean deleted = service.deleteById(id);
-            if (!deleted) {
-                return ResponseEntity.notFound().build();
-            }
-            return ResponseEntity.noContent().build();
+            T deleted = service.deleteById(id);
+
+            return ResponseEntity.ok(deleted);
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }
     }
+
+
 }
