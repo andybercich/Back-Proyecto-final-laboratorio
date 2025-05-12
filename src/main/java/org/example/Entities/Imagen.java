@@ -28,7 +28,7 @@ public class Imagen extends Base{
     private String alt;
 
     @ManyToOne
-    @NotNull(message = "Ingresa un detalle valido para la imagen")
+    @NotNull
     @JoinColumn(name = "detalle_id")
     private Detalle detalle;
 

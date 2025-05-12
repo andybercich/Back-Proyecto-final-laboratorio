@@ -38,7 +38,7 @@ public class Detalle extends Base{
     @NotNull(message = "Debes ingresar un producto valido para el detalle")
     private Producto producto;
 
-    @OneToMany(mappedBy = "detalle", orphanRemoval = true)
+    @OneToMany(mappedBy = "detalle", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Imagen> imagenList = new ArrayList<>();
 
     @NotNull(message = "Ingresa un stock para el producto")
