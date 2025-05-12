@@ -11,4 +11,6 @@ import java.util.List;
 @Repository
 public interface DetalleRepository extends BaseRepository<Detalle,Long> {
 
+    List<Detalle> findByProductoId(Long productoId);
+
 }

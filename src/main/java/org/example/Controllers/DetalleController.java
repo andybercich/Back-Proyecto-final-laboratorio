@@ -18,5 +18,15 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         super(service);
     }
 
+    @GetMapping("/producto/{id}")
+    public ResponseEntity<?> findByIdProducto(@PathVariable Long id){
+        try {
+            List<Detalle> detalles = service.findAllDetalleByIdProducto(id);
+            return  ResponseEntity.ok(detalles);
+        }catch (RuntimeException e){
+            return  ResponseEntity.internalServerError().body("Error: "+e.getMessage());
+        }
+    }
+
 
 }
