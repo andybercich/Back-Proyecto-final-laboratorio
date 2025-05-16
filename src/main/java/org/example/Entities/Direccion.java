@@ -1,5 +1,8 @@
 package org.example.Entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
@@ -30,8 +33,8 @@ public class Direccion extends Base{
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "usuarioDireccion",
-            joinColumns = @JoinColumn(name = "usuario_id"),
-            inverseJoinColumns = @JoinColumn(name = "direccion_id")
+            joinColumns = @JoinColumn(name = "direccion_id"),
+            inverseJoinColumns = @JoinColumn(name = "usuario")
     )
     private List<Usuario> usuarios = new ArrayList<>();
 
