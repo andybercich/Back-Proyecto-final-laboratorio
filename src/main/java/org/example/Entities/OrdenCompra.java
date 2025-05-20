@@ -1,9 +1,6 @@
 package org.example.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Inheritance;
-import jakarta.persistence.InheritanceType;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -23,7 +20,9 @@ import java.time.LocalDate;
 @EqualsAndHashCode(callSuper = true)
 public class OrdenCompra extends Base{
 
-    @NotNull(message = "La orden compra debe estar relacionado con un usuario")
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "usuario_id", nullable = false)
+    @NotNull(message = "La orden compra debe estar relacionada con un usuario")
     private Usuario usuario;
 
     private BigDecimal total;
@@ -32,6 +31,9 @@ public class OrdenCompra extends Base{
 
     private LocalDate fecha;
 
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "direccion_id", nullable = false)
+    @NotNull(message = "Debe especificar una dirección válida")
     private Direccion direccion;
 
     @NotNull(message = "Determina si se usará la direccion del usuario o no")
