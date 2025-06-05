@@ -1,7 +1,10 @@
 package org.example.Services;
 
 import org.example.Entities.Direccion;
+import org.example.Entities.UpdateUser;
+import org.example.Entities.UserLogin;
 import org.example.Entities.Usuario;
+import org.example.JWT.JwtService;
 import org.example.Repositories.DireccionRepository;
 import org.example.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +15,9 @@ import java.util.List;
 
 @Service
 public class UsuarioService extends BaseService<Usuario,Long, UsuarioRepository>{
+
+    @Autowired
+    private JwtService serviceJWT;
 
     @Autowired
     private DireccionRepository direccionRepository;
@@ -52,6 +58,22 @@ public class UsuarioService extends BaseService<Usuario,Long, UsuarioRepository>
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
         }
+    }
+
+    public UpdateUser update (Long id, Usuario newUsuario, String token){
+
+        try{
+
+            String mail = serviceJWT.getMailFromToken(token);
+            Usuario usuario = repository.findByMail(mail).orElseThrow();
+
+            this.update(usuario.getId(), newUsuario);
+            return new UpdateUser(usuario.getNombre(), usuario.getDni(), usuario.getMail(), usuario.getDirecciones());
+
+        }catch (Exception e){
+            throw new RuntimeException("El mail enviado es inválido para modificar este usuario: "+e.getMessage());
+        }
+
     }
 
 }
