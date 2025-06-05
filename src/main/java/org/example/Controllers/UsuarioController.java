@@ -29,13 +29,12 @@ public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepos
         }
     }*/
 
-    @GetMapping("/login")
+    @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLogin userLogin){
-        try{
+        try {
             return ResponseEntity.ok(authService.login(userLogin));
-
-        }catch (Exception e){
-            return ResponseEntity.status(404).body("DATOS INVALIDOS" + e.getMessage());
+        } catch (Exception e) {
+            return ResponseEntity.status(404).body("DATOS INVALIDOS: " + e.getMessage());
         }
     }
 

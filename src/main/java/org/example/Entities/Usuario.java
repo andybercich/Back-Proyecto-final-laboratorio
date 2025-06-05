@@ -44,6 +44,7 @@ public class Usuario extends Base implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private Rol rol;
+
     @ManyToMany(mappedBy = "usuarios")
     private List<Direccion> direcciones = new ArrayList<>();
 

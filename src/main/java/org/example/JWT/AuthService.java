@@ -35,6 +35,12 @@ public class AuthService {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
         usuario.setRol(Rol.USER);
         usuarioRepository.save(usuario);
-        return new AuthResponse(jwtService.getToken(usuario));
+        return new AuthResponse(
+                usuario.getNombre(),
+                usuario.getDni(),
+                usuario.getMail(),
+                usuario.getDirecciones(),
+                jwtService.getToken(usuario)
+        );
     }
 }

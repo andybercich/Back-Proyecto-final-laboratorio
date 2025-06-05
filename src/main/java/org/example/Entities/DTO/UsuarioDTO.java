@@ -5,8 +5,8 @@ import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import org.example.Entities.Enum.Rol;
 import org.example.Entities.Usuario;
-import org.example.Entities.Enum.TipoUsuario;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +19,11 @@ public class UsuarioDTO {
 
     private Long id;
     private String nombre;
-    private String contra;
+    private String password;
     private String mail;
 
     @Enumerated(EnumType.STRING)
-    private TipoUsuario rol;
+    private Rol rol;
 
     private String dni;
 
@@ -34,7 +34,7 @@ public class UsuarioDTO {
         return UsuarioDTO.builder()
                 .id(usuario.getId())
                 .nombre(usuario.getNombre())
-                .contra(usuario.getContra())
+                .password(usuario.getPassword())
                 .mail(usuario.getMail())
                 .rol(usuario.getRol())
                 .dni(usuario.getDni())
