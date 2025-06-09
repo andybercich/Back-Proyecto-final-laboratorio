@@ -27,7 +27,6 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                // endpoints públicos
                                 .requestMatchers(HttpMethod.POST, "/sneaks/usuario/registrarUsuario").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/sneaks/usuario/login").permitAll()
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
@@ -37,17 +36,8 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/sneaks/imagen/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/detalle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/descuento/**").permitAll()
-
-                                // aquí restringimos POST y PUT para productos solo para ADMIN
-                                .requestMatchers(HttpMethod.POST, "/sneaks/producto/**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/sneaks/producto/**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.POST, "/sneaks/detalle/**").hasAuthority("ADMIN")
-                                .requestMatchers(HttpMethod.PUT, "/sneaks/detalle/**").hasAuthority("ADMIN")
-
-                                // cualquier otra request requiere autenticación
                                 .anyRequest().authenticated()
-                )
-                .sessionManagement(session ->
+                ).sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)
