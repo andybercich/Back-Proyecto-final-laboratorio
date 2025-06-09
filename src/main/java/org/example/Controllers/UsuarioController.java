@@ -1,6 +1,7 @@
 package org.example.Controllers;
 
 import org.example.Entities.AuthResponse;
+import org.example.Entities.DTO.UsuarioDTO;
 import org.example.Entities.UserLogin;
 import org.example.Entities.Usuario;
 import org.example.Repositories.UsuarioRepository;
@@ -10,11 +11,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/sneaks/usuario")
-public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepository, UsuarioService>{
+public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepository, UsuarioService> {
     @Autowired
     private AuthService authService;
+
     public UsuarioController(UsuarioService service) {
         super(service);
     }
@@ -28,6 +32,26 @@ public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepos
             throw new RuntimeException(e.getMessage());
         }
     }*/
+
+    @GetMapping("/get")
+    public ResponseEntity<List<UsuarioDTO>> getAllUsuario(){
+        try{
+            List<Usuario> usuarios = service.findAll();
+            return ResponseEntity.ok(UsuarioDTO.fromEntitys(usuarios));
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @GetMapping("/get/{id}")
+    public ResponseEntity<UsuarioDTO> getUsuarioById(@PathVariable Long id){
+        try{
+            Usuario usuario = service.findById(id);
+            return ResponseEntity.ok(UsuarioDTO.fromEntity(usuario));
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLogin userLogin){

@@ -27,18 +27,24 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-
+                                // endpoints públicos
                                 .requestMatchers(HttpMethod.POST, "/sneaks/usuario/registrarUsuario").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/sneaks/usuario/login").permitAll()
                                 .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
-                                // Otros endpoints públicos
                                 .requestMatchers(HttpMethod.GET, "/sneaks/categoria/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/talle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/precio/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/imagen/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/detalle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/descuento/**").permitAll()
-                                // Cualquier otra request requiere autenticación
+
+                                // aquí restringimos POST y PUT para productos solo para ADMIN
+                                .requestMatchers(HttpMethod.POST, "/sneaks/producto/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/producto/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/sneaks/detalle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/detalle/**").hasAuthority("ADMIN")
+
+                                // cualquier otra request requiere autenticación
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(session ->
