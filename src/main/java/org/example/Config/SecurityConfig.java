@@ -29,16 +29,15 @@ public class SecurityConfig {
                 .authorizeHttpRequests(authRequest ->
                         authRequest
                                 .requestMatchers("/sneaks/usuario/**").authenticated()
-                                .requestMatchers(HttpMethod.POST, "/sneaks/usuario/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/sneaks/usuario/login").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sneaks/categoria/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sneaks/talle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sneaks/precio/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sneaks/imagen/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/talle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sneaks/detalle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET,"/sneaks/descuento/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/descuento/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/descuento/**").permitAll()
+                                .requestMatchers(HttpMethod.GET,"/sneaks/producto/**").permitAll()
+                                
                                 .anyRequest().authenticated()
                 )
                 .sessionManagement(securitySessionManagementConfigurer ->
