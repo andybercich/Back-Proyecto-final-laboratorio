@@ -17,14 +17,14 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 public class OrdenCompraDetalle extends Base{
 
-    @ManyToOne
-    @JoinColumn(name = "ordenCompra_id")
+    @ManyToOne(optional = false, cascade = {CascadeType.MERGE})
+    @JoinColumn(name = "orden_compra_id", nullable = false)
     private OrdenCompra ordenCompra;
 
-    @ManyToOne
-    @JoinColumn(name = "producto_id")
+    @ManyToOne(optional = false, cascade = { CascadeType.MERGE})
+    @JoinColumn(name = "detalle_producto_id", nullable = false)
     @NotNull(message = "Ingresa un producto válido")
-    private Producto producto;
+    private Detalle detalle;
 
     private int cantidad;
 

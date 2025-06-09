@@ -22,27 +22,24 @@ public class SecurityConfig {
     private final AuthenticationProvider authenticationProvider;
 
     @Bean
-    public SecurityFilterChain securityFilterChain (HttpSecurity http) throws Exception {
-        return  http
-                .csrf(csrf ->
-                        csrf.disable())
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+        return http
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(authRequest ->
                         authRequest
-                                .requestMatchers("/sneaks/usuario/**").authenticated()
+                                .requestMatchers(HttpMethod.POST, "/sneaks/usuario/registrarUsuario").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/sneaks/usuario/login").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/categoria/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/talle/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/precio/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/imagen/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/detalle/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/descuento/**").permitAll()
-                                .requestMatchers(HttpMethod.GET,"/sneaks/producto/**").permitAll()
-                                
+                                .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/categoria/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/talle/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/precio/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/imagen/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/detalle/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/descuento/**").permitAll()
                                 .anyRequest().authenticated()
+                ).sessionManagement(session ->
+                        session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
-                .sessionManagement(securitySessionManagementConfigurer ->
-                        securitySessionManagementConfigurer
-                                .sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(authenticationProvider)
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .build();

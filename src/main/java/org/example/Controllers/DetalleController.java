@@ -72,7 +72,7 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }
     }
 
-    @PutMapping("/post")
+    @PostMapping("/post")
     public ResponseEntity<?> postDetalle (@RequestBody Detalle detalle){
         try {
 
