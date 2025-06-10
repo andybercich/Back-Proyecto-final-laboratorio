@@ -18,4 +18,14 @@ public class DireccionController extends BaseController<Direccion,Long, Direccio
     public DireccionController(DireccionService service) {
         super(service);
     }
+
+    @PostMapping("/post")
+    public ResponseEntity<?> postDireccion(@RequestBody Direccion direccion){
+        try{
+            Direccion direccion1 = service.saveToken(direccion);
+            return ResponseEntity.ok(direccion1);
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
 }
