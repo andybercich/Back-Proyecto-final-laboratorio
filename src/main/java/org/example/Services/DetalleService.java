@@ -5,6 +5,7 @@ import org.example.Entities.Detalle;
 import org.example.Entities.Imagen;
 import org.example.Entities.Precio;
 import org.example.Repositories.DetalleRepository;
+import org.example.Repositories.PrecioRepository;
 import org.example.Repositories.TalleRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -19,6 +20,9 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
     @Autowired
     private TalleRepository talleRepository;
 
+    @Autowired
+    private PrecioRepository precioRepository;
+
     public List<Detalle> findAllDetalleByIdProducto (Long id){
         try{
             List<Detalle> detalles= repository.findByProductoId(id);
@@ -30,6 +34,23 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
         }
     }
 
+    public Detalle save(Detalle detalle){
+        try{
+
+            Precio precio = detalle.getPrecio();
+
+            precio.setDetalle(detalle);
+            precioRepository.save(precio);
+            detalle.setPrecio(precio);
+
+            return repository.save(detalle);
+
+
+
+        }catch (Exception e){
+            throw new RuntimeException("No se pudo crear el nuevo detalle: "+e.getMessage());
+        }
+    }
 
     @Transactional
     public Detalle updateDetalle(Detalle detalle) {

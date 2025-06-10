@@ -10,6 +10,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "OrdenCompra")
@@ -38,5 +41,24 @@ public class OrdenCompra extends Base{
 
     @NotNull(message = "Determina si se usará la direccion del usuario o no")
     private boolean direccionUsuario;
+
+    @OneToMany(mappedBy = "ordenCompra", orphanRemoval = true)
+    protected List<OrdenCompraDetalle> detalles = new ArrayList<>();
+
+    public void calcularTotal() {
+        BigDecimal suma = BigDecimal.ZERO;
+        for (OrdenCompraDetalle detalle : detalles) {
+            detalle.calcularSubtotal();
+            if (detalle.getSubtotal() != null) {
+                suma = suma.add(detalle.getSubtotal());
+            }
+        }
+        this.total = suma;
+    }
+
+
+    public void setTime (){
+        this.fecha = LocalDate.now();
+    }
 
 }

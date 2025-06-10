@@ -25,7 +25,6 @@ public class DireccionService extends BaseService<Direccion, Long, DireccionRepo
             Direccion existingEntity = repository.findById(id)
                     .orElseThrow(() -> new Exception("Entity not found"));
 
-            // Ignoro "usuarios" al hacer el copyProperties SOLO para Direccion
             BeanUtils.copyProperties(entity, existingEntity, "id", "usuarios");
 
             return repository.saveAndFlush(existingEntity);

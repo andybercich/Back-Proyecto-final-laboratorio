@@ -30,9 +30,8 @@ public class Precio extends Base{
     @NotNull(message = "Ingresa un precio venta del producto")
     private BigDecimal precioVenta;
 
-    @OneToOne
-    @NotNull(message = "Ingresa un detalle valido")
-    @JoinColumn(name = "detalle_id")
+    @OneToOne(mappedBy = "precio")
+    @NotNull
     private Detalle detalle;
 
 }

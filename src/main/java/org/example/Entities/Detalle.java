@@ -43,4 +43,9 @@ public class Detalle extends Base{
     @NotNull(message = "Ingresa un stock para el producto")
     @Min(value = 0, message = "El valor minimo del stock producto es 0(cero)")
     private int stock;
+
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "precio_id")
+    @NotNull
+    private Precio precio;
 }
