@@ -88,7 +88,7 @@ public class DataInitializer implements CommandLineRunner {
         usuario.setPassword(passwordEncoder.encode("password123"));
         usuario.setDni("12345678");
         usuario.setMail("juan@example.com");
-        usuario.setRol(Rol.USER);
+        usuario.setRol(Rol.ADMIN);
         entityManager.persist(usuario);
 
         //  Crear Dirección
@@ -108,7 +108,6 @@ public class DataInitializer implements CommandLineRunner {
         orden.setDireccion(direccion);
         orden.setDireccionUsuario(true);
         orden.setFecha(LocalDate.now());
-        orden.setDescuento(0);
         orden.setTotal(BigDecimal.valueOf(26000));
         entityManager.persist(orden);
 

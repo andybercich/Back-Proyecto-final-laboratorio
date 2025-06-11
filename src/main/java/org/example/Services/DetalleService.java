@@ -134,34 +134,36 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
         detalleOld.setColor(detalle.getColor());
         detalleOld.setEstado(detalle.isEstado());
         detalleOld.setStock(detalle.getStock());
-        detalleOld.setTalle(talleRepository.findById(detalle.getTalle().getId())
-                .orElseThrow(() -> new RuntimeException("Talle no encontrado")));
+        detalleOld.setTalle(
+                talleRepository.findById(detalle.getTalle().getId())
+                        .orElseThrow(() -> new RuntimeException("Talle no encontrado"))
+        );
 
-        List<Imagen> nuevasImagenes = new ArrayList<>();
+        List<Imagen> imagenesActualizadas = new ArrayList<>();
 
-        for (Imagen imagenes : detalle.getImagenList()) {
-            Imagen img;
-            if ( imagenes.getId() != null) {
-                img = detalle.getImagenList().stream()
-                        .filter(i -> i.getId().equals(imagenes.getId()))
+        for (Imagen nuevaImagen : detalle.getImagenList()) {
+            if (nuevaImagen.getId() != null) {
+                Imagen existente = detalleOld.getImagenList().stream()
+                        .filter(i -> i.getId().equals(nuevaImagen.getId()))
                         .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Imagen no encontrada: id=" + imagenes.getId()));
-                img.setUrl(imagenes.getUrl());
-                img.setAlt(imagenes.getAlt());
+                        .orElseThrow(() -> new RuntimeException("Imagen no encontrada: id=" + nuevaImagen.getId()));
+                existente.setUrl(nuevaImagen.getUrl());
+                existente.setAlt(nuevaImagen.getAlt());
+                imagenesActualizadas.add(existente);
             } else {
-                img = new Imagen();
-                img.setUrl(imagenes.getUrl());
-                img.setAlt(imagenes.getAlt());
-                img.setDetalle(detalleOld);
+                Imagen nueva = new Imagen();
+                nueva.setUrl(nuevaImagen.getUrl());
+                nueva.setAlt(nuevaImagen.getAlt());
+                nueva.setDetalle(detalleOld);
+                imagenesActualizadas.add(nueva);
             }
-            nuevasImagenes.add(img);
         }
 
         detalleOld.getImagenList().clear();
-        detalleOld.getImagenList().addAll(nuevasImagenes);
-        repository.save(detalleOld);
+        detalleOld.getImagenList().addAll(imagenesActualizadas);
 
         return repository.save(detalleOld);
     }
+
 
 }

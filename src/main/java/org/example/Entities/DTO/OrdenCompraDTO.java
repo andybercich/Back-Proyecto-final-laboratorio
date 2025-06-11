@@ -19,7 +19,6 @@ public class OrdenCompraDTO {
     private boolean estado;
     private UsuarioDTO usuario;
     private BigDecimal total;
-    private double descuento;
     private LocalDate fecha;
     private DireccionDTO direccion;
     private boolean direccionUsuario;
@@ -30,7 +29,6 @@ public class OrdenCompraDTO {
                 .estado(ordenCompra.isEstado())
                 .usuario(UsuarioDTO.fromEntity(ordenCompra.getUsuario()))
                 .total(ordenCompra.getTotal())
-                .descuento(ordenCompra.getDescuento())
                 .fecha(ordenCompra.getFecha())
                 .direccion(DireccionDTO.fromEntity(ordenCompra.getDireccion()))
                 .direccionUsuario(ordenCompra.isDireccionUsuario())

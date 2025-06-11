@@ -30,8 +30,6 @@ public class OrdenCompra extends Base{
 
     private BigDecimal total;
 
-    private double descuento;
-
     private LocalDate fecha;
 
     @ManyToOne(optional = false)
