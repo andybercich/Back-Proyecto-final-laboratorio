@@ -25,6 +25,7 @@ public class PrecioController extends BaseController<Precio,Long, PrecioReposito
     public ResponseEntity<List<Precio>> getDetalleDescuentoByFecha(@PathVariable String fecha){
         try {
             LocalDate date = LocalDate.parse(fecha);
+            System.out.println(fecha);
             return ResponseEntity.ok(service.getDetalleDescuentoByFecha(date));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();

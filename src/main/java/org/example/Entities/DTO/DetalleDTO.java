@@ -29,10 +29,12 @@ public class DetalleDTO {
 
     private int stock;
 
+    private PrecioDTO precioDTO;
+
     public static DetalleDTO fromEntity(Detalle detalle){
         return new DetalleDTO(detalle.getId(), detalle.getTalle(), detalle.isEstado(),
                 detalle.getColor(), detalle.getProducto(), ImagenDTO.fromEntitys(detalle.getImagenList()),
-                detalle.getStock());
+                detalle.getStock(), PrecioDTO.fromEntity(detalle.getPrecio()));
     }
 
     public static List<DetalleDTO> fromEntitys(List<Detalle> detalles) {

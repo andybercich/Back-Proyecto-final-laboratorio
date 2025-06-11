@@ -5,8 +5,11 @@ import lombok.Builder;
 import lombok.Data;
 import org.example.Entities.Direccion;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Data
-@Builder
 @AllArgsConstructor
 public class DireccionDTO {
 
@@ -18,13 +21,21 @@ public class DireccionDTO {
     private String codigoPostal;
 
     public static DireccionDTO fromEntity(Direccion direccion) {
-        return DireccionDTO.builder()
-                .id(direccion.getId())
-                .localidad(direccion.getLocalidad())
-                .pais(direccion.getPais())
-                .provincia(direccion.getProvincia())
-                .departamento(direccion.getDepartamento())
-                .codigoPostal(direccion.getCodigoPostal())
-                .build();
+        if (direccion == null) return null;
+        return new DireccionDTO(
+                direccion.getId(),
+                direccion.getLocalidad(),
+                direccion.getPais(),
+                direccion.getProvincia(),
+                direccion.getDepartamento(),
+                direccion.getCodigoPostal()
+        );
+    }
+
+    public static List<DireccionDTO> fromEntityList(List<Direccion> direcciones) {
+        if (direcciones == null) return Collections.emptyList();
+        return direcciones.stream()
+                .map(DireccionDTO::fromEntity)
+                .collect(Collectors.toList());
     }
 }
