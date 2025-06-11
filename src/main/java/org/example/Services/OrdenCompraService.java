@@ -41,7 +41,6 @@ public class OrdenCompraService extends BaseService<OrdenCompra,Long, OrdenCompr
                 direccionService.saveToken(newOrdenCompra.getDireccion());
             }
 
-
             for (OrdenCompraDetalle d : detallePedidos){
                 if (d.getCantidad() > d.getDetalle().getStock()){
                     throw new Exception("EL DETALLE NO PUEDE CREARSE PORQUE NO HAY MÁS STOCK DE ESTE PRODUCTO");
