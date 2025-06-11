@@ -2,11 +2,11 @@ package org.example.JWT;
 
 import lombok.RequiredArgsConstructor;
 import org.example.Entities.AuthResponse;
+import org.example.Entities.DTO.DireccionDTO;
 import org.example.Entities.Enum.Rol;
 import org.example.Entities.UserLogin;
 import org.example.Entities.Usuario;
 import org.example.Repositories.UsuarioRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -26,9 +26,10 @@ public class AuthService {
 
         Usuario userDetails = usuarioRepository.findByMail(userLogin.getMail()).orElseThrow();
         String token = jwtService.getToken(userDetails);
-
+        System.out.println(token);
       return new AuthResponse(userDetails.getNombre(), userDetails.getDni(), userDetails.getMail(),
-              userDetails.getDirecciones(), token);
+              userDetails.getRol(), userDetails.isEstado(),
+              DireccionDTO.fromEntityList(userDetails.getDirecciones()), token);
     }
 
     public AuthResponse registrar(Usuario usuario) {
@@ -39,7 +40,8 @@ public class AuthService {
                 usuario.getNombre(),
                 usuario.getDni(),
                 usuario.getMail(),
-                usuario.getDirecciones(),
+                usuario.getRol(), usuario.isEstado(),
+                DireccionDTO.fromEntityList(usuario.getDirecciones()),
                 jwtService.getToken(usuario)
         );
     }

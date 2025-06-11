@@ -13,4 +13,13 @@ public interface DetalleRepository extends BaseRepository<Detalle,Long> {
 
     List<Detalle> findByProductoId(Long productoId);
 
+    @Query("""
+        SELECT d
+        FROM Detalle d
+        JOIN d.precio p
+        JOIN p.descuento desc
+        WHERE :fechaActual BETWEEN desc.fechaInicio AND desc.fechaFin
+    """)
+    List<Detalle> findDetallesConDescuentoActivo(@Param("fechaActual") LocalDate fechaActual);
+
 }

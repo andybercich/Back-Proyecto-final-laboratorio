@@ -5,7 +5,6 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.example.Entities.Detalle;
-import org.example.Entities.Precio;
 import org.example.Entities.Producto;
 import org.example.Entities.Talle;
 
@@ -33,16 +32,9 @@ public class DetalleDTO {
     private PrecioDTO precioDTO;
 
     public static DetalleDTO fromEntity(Detalle detalle){
-        return new DetalleDTO(
-                detalle.getId(),
-                detalle.getTalle(),
-                detalle.isEstado(),
-                detalle.getColor(),
-                detalle.getProducto(),
-                ImagenDTO.fromEntitys(detalle.getImagenList()),
-                detalle.getStock(),
-                PrecioDTO.fromEntity(detalle.getPrecio()) // ✅ Esta es la forma correcta
-        );
+        return new DetalleDTO(detalle.getId(), detalle.getTalle(), detalle.isEstado(),
+                detalle.getColor(), detalle.getProducto(), ImagenDTO.fromEntitys(detalle.getImagenList()),
+                detalle.getStock(), PrecioDTO.fromEntity(detalle.getPrecio()));
     }
 
     public static List<DetalleDTO> fromEntitys(List<Detalle> detalles) {
@@ -52,4 +44,5 @@ public class DetalleDTO {
         }
         return detalleDTOS;
     }
+
 }

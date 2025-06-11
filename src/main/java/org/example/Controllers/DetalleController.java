@@ -2,6 +2,8 @@ package org.example.Controllers;
 
 import org.example.Entities.DTO.DetalleDTO;
 import org.example.Entities.Detalle;
+import org.example.Entities.Enum.Sexo;
+import org.example.Entities.Enum.TipoProducto;
 import org.example.Entities.Precio;
 import org.example.Repositories.DetalleRepository;
 import org.example.Services.DetalleService;
@@ -9,6 +11,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -19,6 +22,35 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         super(service);
     }
 
+    public ResponseEntity<?> findAll(){
+        try {
+            return ResponseEntity.ok(DetalleDTO.fromEntitys(service.findAll()));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/unicos/filtros")
+    public ResponseEntity<?> obtenerConFiltros(
+            @RequestParam(required = false) Boolean estado,
+            @RequestParam(required = false) Sexo sexo,
+            @RequestParam(required = false) TipoProducto tipo,
+            @RequestParam(required = false) Long idTalle,
+            @RequestParam(required = false) String categoria,
+            @RequestParam(required = false) String fechaDescuento,
+            @RequestParam(required = false) BigDecimal min,
+            @RequestParam(required = false) BigDecimal max
+    ) {
+        try {
+            return ResponseEntity.ok(
+                    service.getDetallesUnicosConFiltros(estado, sexo, tipo, idTalle, categoria, fechaDescuento, min, max)
+            );
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Error: " + e.getMessage());
+        }
+    }
+
+
     //Cambiamos los url por el bucle infinito Pablo
     @GetMapping("/producto/{id}")
     public ResponseEntity<?> findByIdProducto(@PathVariable Long id){
@@ -28,6 +60,17 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }catch (Exception e){
             return  ResponseEntity.internalServerError().body("Error: "+e.getMessage());
         }
+    }
+
+    @GetMapping("/conDescuento/{fecha}")
+    public ResponseEntity<?> obtenerDetallesConDescuento(@PathVariable String fecha) {
+        try {
+            List<Detalle> detalles = service.findDetallesConDescuentoActivo(fecha);
+            return ResponseEntity.ok(DetalleDTO.fromEntitys(detalles));
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+
     }
 
 

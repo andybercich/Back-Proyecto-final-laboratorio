@@ -1,33 +1,35 @@
 package org.example.Entities.DTO;
 
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.example.Entities.Descuento;
-import org.example.Entities.Detalle;
 import org.example.Entities.Precio;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
+@NoArgsConstructor
 public class PrecioDTO {
-    private Long id;
-    private boolean estado;
+
     private Descuento descuento;
     private BigDecimal precioCompra;
     private BigDecimal precioVenta;
 
-    public static PrecioDTO fromEntity(Precio precio){
-        return new PrecioDTO(precio.getId(), precio.isEstado(), precio.getDescuento(), precio.getPrecioCompra(), precio.getPrecioVenta());
-    }
-
-    public static List<PrecioDTO> fromEntitys(List<Precio> precios) {
-        List<PrecioDTO> preciosDTOS = new ArrayList<>();
-        for (Precio precio : precios) {
-            preciosDTOS.add(fromEntity(precio));
+    public static PrecioDTO fromEntity(Precio precio) {
+        if (precio == null) {
+            return null;
         }
-        return preciosDTOS;
+
+        PrecioDTO dto = new PrecioDTO();
+        dto.setDescuento(precio.getDescuento());
+        dto.setPrecioCompra(precio.getPrecioCompra());
+        dto.setPrecioVenta(precio.getPrecioVenta());
+
+        return dto;
     }
 }

@@ -22,7 +22,7 @@ public abstract class BaseController<T extends Base, ID, Repo extends BaseReposi
     }
 
     @GetMapping
-    public ResponseEntity<List<T>> findAll() {
+    public ResponseEntity<?> findAll() {
         try {
             return ResponseEntity.ok(service.findAll());
         } catch (Exception e) {
@@ -31,7 +31,7 @@ public abstract class BaseController<T extends Base, ID, Repo extends BaseReposi
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<T> findById(@PathVariable ID id) {
+    public ResponseEntity<?> findById(@PathVariable ID id) {
         try {
             T entity = service.findById(id);
             if (entity == null) {
@@ -44,7 +44,7 @@ public abstract class BaseController<T extends Base, ID, Repo extends BaseReposi
     }
 
     @PostMapping
-    public ResponseEntity<T> create(@Valid @RequestBody T entity) {
+    public ResponseEntity<?> create(@Valid @RequestBody T entity) {
         try {
             T createdEntity = service.save(entity);
             return ResponseEntity.ok(createdEntity);
@@ -55,7 +55,7 @@ public abstract class BaseController<T extends Base, ID, Repo extends BaseReposi
 
 
     @PutMapping("/{id}")
-    public ResponseEntity<T> update(@PathVariable ID id, @Valid @RequestBody T entity) {
+    public ResponseEntity<?> update(@PathVariable ID id, @Valid @RequestBody T entity) {
         try {
             T updatedEntity = service.update(id, entity);
             if (updatedEntity == null) {
@@ -68,7 +68,7 @@ public abstract class BaseController<T extends Base, ID, Repo extends BaseReposi
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<T> delete(@PathVariable ID id) {
+    public ResponseEntity<?> delete(@PathVariable ID id) {
         try {
             T deleted = service.deleteById(id);
 
