@@ -30,7 +30,6 @@ public class OrdenCompraDTO {
                 .estado(ordenCompra.isEstado())
                 .usuario(UsuarioDTO.fromEntity(ordenCompra.getUsuario()))
                 .total(ordenCompra.getTotal())
-                .descuento(ordenCompra.getDescuento())
                 .fecha(ordenCompra.getFecha())
                 .direccion(DireccionDTO.fromEntity(ordenCompra.getDireccion()))
                 .direccionUsuario(ordenCompra.isDireccionUsuario())

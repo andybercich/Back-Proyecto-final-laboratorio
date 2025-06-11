@@ -5,7 +5,6 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.example.Entities.Detalle;
-import org.example.Entities.Precio;
 import org.example.Entities.Producto;
 import org.example.Entities.Talle;
 
@@ -14,7 +13,7 @@ import java.util.List;
 
 @Data
 @AllArgsConstructor
-public class DetalleDTO {
+public class DetalleDescuentoDTO {
     private Long id;
 
     private Talle talle;
@@ -30,26 +29,22 @@ public class DetalleDTO {
 
     private int stock;
 
-    private PrecioDTO precioDTO;
-
-    public static DetalleDTO fromEntity(Detalle detalle){
-        return new DetalleDTO(
+    public static DetalleDescuentoDTO fromEntity(Detalle detalle){
+        return new DetalleDescuentoDTO(
                 detalle.getId(),
                 detalle.getTalle(),
                 detalle.isEstado(),
                 detalle.getColor(),
                 detalle.getProducto(),
                 ImagenDTO.fromEntitys(detalle.getImagenList()),
-                detalle.getStock(),
-                PrecioDTO.fromEntity(detalle.getPrecio()) // ✅ Esta es la forma correcta
+                detalle.getStock()
         );
     }
-
-    public static List<DetalleDTO> fromEntitys(List<Detalle> detalles) {
-        List<DetalleDTO> detalleDTOS = new ArrayList<>();
+    public static List<DetalleDescuentoDTO> fromEntitys(List<Detalle> detalles) {
+        List<DetalleDescuentoDTO> detalleDescuentoDTOS = new ArrayList<>();
         for (Detalle detalle : detalles) {
-            detalleDTOS.add(fromEntity(detalle));
+            detalleDescuentoDTOS.add(fromEntity(detalle));
         }
-        return detalleDTOS;
+        return detalleDescuentoDTOS;
     }
 }

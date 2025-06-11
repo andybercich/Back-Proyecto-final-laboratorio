@@ -1,5 +1,6 @@
 package org.example.Controllers;
 
+import org.example.Entities.DTO.PrecioDescuentoDTO;
 import org.example.Entities.Precio;
 import org.example.Repositories.PrecioRepository;
 import org.example.Services.PrecioService;
@@ -22,10 +23,11 @@ public class PrecioController extends BaseController<Precio,Long, PrecioReposito
 
     //La fecha va a si pablix 2025-04-28
     @GetMapping("/fechaDescuento/{fecha}")
-    public ResponseEntity<List<Precio>> getDetalleDescuentoByFecha(@PathVariable String fecha){
+    public ResponseEntity<List<PrecioDescuentoDTO>> getDetalleDescuentoByFecha(@PathVariable String fecha){
         try {
             LocalDate date = LocalDate.parse(fecha);
-            return ResponseEntity.ok(service.getDetalleDescuentoByFecha(date));
+            List<Precio> precios = service.getDetalleDescuentoByFecha(date);
+            return  ResponseEntity.ok(PrecioDescuentoDTO.fromEntitys(precios));
         } catch (Exception e) {
             return ResponseEntity.internalServerError().build();
         }

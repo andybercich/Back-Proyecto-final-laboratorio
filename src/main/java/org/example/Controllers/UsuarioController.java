@@ -67,4 +67,16 @@ public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepos
         return ResponseEntity.ok(authService.registrar(usuario));
     }
 
+    @PutMapping("/update/{id}")
+    public ResponseEntity<UsuarioDTO> updateUsuario(@PathVariable Long id, @RequestBody Usuario usuario) {
+        try {
+            Usuario updatedUsuario = service.update(id, usuario);
+            if (updatedUsuario == null) {
+                return ResponseEntity.notFound().build();
+            }
+            return ResponseEntity.ok(UsuarioDTO.fromEntity(updatedUsuario));
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 }

@@ -39,11 +39,14 @@ public class DireccionService extends BaseService<Direccion, Long, DireccionRepo
                     SecurityContextHolder.getContext().getAuthentication().getName()
             ).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            user.getDirecciones().add(entity);
+            // Ignorar cualquier usuario que venga del frontend
+            entity.setUsuarios(new ArrayList<>());
             entity.getUsuarios().add(user);
+
+            user.getDirecciones().add(entity);
+
             repository.save(entity);
             usuarioRepository.save(user);
-
 
             return entity;
         } catch (Exception e) {

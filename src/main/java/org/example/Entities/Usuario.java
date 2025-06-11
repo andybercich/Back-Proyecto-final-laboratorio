@@ -1,6 +1,7 @@
 package org.example.Entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -50,6 +51,7 @@ public class Usuario extends Base implements UserDetails {
     private List<Direccion> direcciones = new ArrayList<>();
 
 
+    @JsonProperty(access = JsonProperty.Access.READ_ONLY)
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(rol.name()));

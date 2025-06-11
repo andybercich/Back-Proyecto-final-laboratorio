@@ -23,44 +23,4 @@ public class OrdenCompraService extends BaseService<OrdenCompra,Long, OrdenCompr
 
     @Autowired
     private OrdenCompraDetalleRepository ordenCompraDetalleRepository;
-
-
-    @Override
-    public OrdenCompra save(OrdenCompra newOrdenCompra){
-        try{
-            List<OrdenCompraDetalle> detallePedidos = newOrdenCompra.getDetalles();
-
-            for (OrdenCompraDetalle d : detallePedidos){
-                if (d.getCantidad() > d.getDetalle().getStock()){
-                    throw new Exception("EL DETALLE NO PUEDE CREARSE PORQUE NO HAY MÁS STOCK DE ESTE PRODUCTO");
-                }else{
-                    Detalle producto = d.getDetalle();
-                    producto.setStock(producto.getStock() - d.getCantidad());
-                    detalleRepository.saveAndFlush(producto);
-                }
-
-                d.setDetalle(detalleRepository.getReferenceById(d.getDetalle().getId()));
-                d.setOrdenCompra(newOrdenCompra);
-                d.calcularSubtotal();
-
-            }
-            newOrdenCompra.setDetalles(detallePedidos);
-            newOrdenCompra.calcularTotal();
-            newOrdenCompra.setTime();
-            repository.save(newOrdenCompra);
-
-            for (OrdenCompraDetalle d : detallePedidos){
-                ordenCompraDetalleRepository.save(d);
-            }
-
-            return newOrdenCompra;
-        }catch (Exception e){
-            throw new RuntimeException("Error al crear orden compra: "+ e.getMessage());
-        }
-
-
-
-    }
-
-
 }

@@ -14,9 +14,10 @@ public class ImagenDTO {
     private String alt;
     private String url;
     private Long idDetalle;
+    private boolean estado;
 
     static ImagenDTO fromEntity(Imagen imagen) {
-        return new ImagenDTO(imagen.getId(), imagen.getAlt(), imagen.getUrl(), imagen.getDetalle().getId()
+        return new ImagenDTO(imagen.getId(), imagen.getAlt(), imagen.getUrl(), imagen.getDetalle().getId(), imagen.isEstado()
         );
     }
 

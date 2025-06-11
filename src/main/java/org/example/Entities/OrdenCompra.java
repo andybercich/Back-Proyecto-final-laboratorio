@@ -31,8 +31,6 @@ public class OrdenCompra extends Base{
 
     private BigDecimal total;
 
-    private double descuento;
-
     private LocalDate fecha;
 
     @ManyToOne(optional = false)
@@ -42,21 +40,6 @@ public class OrdenCompra extends Base{
 
     @NotNull(message = "Determina si se usará la direccion del usuario o no")
     private boolean direccionUsuario;
-
-    @OneToMany(mappedBy = "ordenCompra", orphanRemoval = true)
-    protected List<OrdenCompraDetalle> detalles = new ArrayList<>();
-
-    public void calcularTotal() {
-        BigDecimal suma = BigDecimal.ZERO;
-        for (OrdenCompraDetalle detalle : detalles) {
-            detalle.calcularSubtotal();
-            if (detalle.getSubtotal() != null) {
-                suma = suma.add(detalle.getSubtotal());
-            }
-        }
-        this.total = suma;
-    }
-
 
     public void setTime (){
         this.fecha = LocalDate.now();
