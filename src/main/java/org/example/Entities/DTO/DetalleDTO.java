@@ -44,5 +44,4 @@ public class DetalleDTO {
         }
         return detalleDTOS;
     }
-
 }

@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 @NoArgsConstructor
 public class PrecioDTO {
 
+    private Long id;
     private Descuento descuento;
     private BigDecimal precioCompra;
     private BigDecimal precioVenta;
@@ -26,6 +27,7 @@ public class PrecioDTO {
         }
 
         PrecioDTO dto = new PrecioDTO();
+        dto.setId(precio.getId());
         dto.setDescuento(precio.getDescuento());
         dto.setPrecioCompra(precio.getPrecioCompra());
         dto.setPrecioVenta(precio.getPrecioVenta());

@@ -1,6 +1,7 @@
 package org.example.Controllers;
 
 import org.example.Entities.DTO.DetalleDTO;
+import org.example.Entities.DTO.DetalleDescuentoDTO;
 import org.example.Entities.Detalle;
 import org.example.Entities.Enum.Sexo;
 import org.example.Entities.Enum.TipoProducto;
@@ -50,7 +51,6 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }
     }
 
-
     //Cambiamos los url por el bucle infinito Pablo
     @GetMapping("/producto/{id}")
     public ResponseEntity<?> findByIdProducto(@PathVariable Long id){
@@ -72,8 +72,6 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }
 
     }
-
-
 
     @GetMapping("/get/{id}")
     public ResponseEntity<?> getById(@PathVariable Long id){
@@ -101,20 +99,19 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }
     }
 
-
-
     @Override
     @PutMapping("/{id}")
     public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Detalle detalle){
         try{
-            return ResponseEntity.ok(DetalleDTO.fromEntity(service.updateDetalle(detalle, id)));
+            return ResponseEntity.ok(DetalleDescuentoDTO.fromEntity(service.updateDetalle(detalle, id)));
         }catch (Exception e){
             return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<?> postDetalle (@RequestBody Detalle detalle){
+    @Override
+    @PostMapping
+    public ResponseEntity<?> create (@RequestBody Detalle detalle){
         try {
 
             Detalle detalle1= service.save(detalle);
@@ -125,6 +122,4 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
             return  ResponseEntity.internalServerError().body("Error: "+e.getMessage());
         }
     }
-
-
 }

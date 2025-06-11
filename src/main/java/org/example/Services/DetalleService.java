@@ -114,14 +114,9 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
         try{
 
             Precio precio = detalle.getPrecio();
-
             precio.setDetalle(detalle);
             precioRepository.save(precio);
-            detalle.setPrecio(precio);
-
             return repository.save(detalle);
-
-
 
         }catch (Exception e){
             throw new RuntimeException("No se pudo crear el nuevo detalle: "+e.getMessage());
@@ -129,65 +124,31 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
     }
 
     @Transactional
-    public Detalle updateDetalle(Detalle detalle, Long id) {
-        Detalle detalleOld = repository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Detalle no encontrado"));
+    public Detalle updateDetalle(Detalle detalleActualizado, Long id) throws Exception {
+        Detalle existente = repository.findById(id)
+                .orElseThrow(() -> new Exception("Detalle no encontrado"));
 
-        detalleOld.setColor(detalle.getColor());
-        detalleOld.setEstado(detalle.isEstado());
-        detalleOld.setStock(detalle.getStock());
+        // Actualizás campos simples
+        existente.setColor(detalleActualizado.getColor());
+        existente.setEstado(detalleActualizado.isEstado());
+        existente.setStock(detalleActualizado.getStock());
+        existente.setTalle(detalleActualizado.getTalle());
+        existente.setProducto(detalleActualizado.getProducto());
 
-        Talle talle = talleRepository.findById(detalle.getTalle().getId())
-                .orElseThrow(() -> new RuntimeException("Talle no encontrado"));
-        detalleOld.setTalle(talle);
+        // Imagenes: manejarlas con cuidado si usás cascade
+        existente.getImagenList().clear();
+        existente.getImagenList().addAll(detalleActualizado.getImagenList());
 
-        Producto producto = productoRepository.findById(detalle.getProducto().getId())
-                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
-        detalleOld.setProducto(producto);
+        // ✅ ACA ESTÁ LA CLAVE: actualizás el precio existente en lugar de setear uno nuevo
+        Precio precioExistente = existente.getPrecio();
+        Precio nuevoPrecio = detalleActualizado.getPrecio();
 
-        List<Imagen> nuevasImagenes = new ArrayList<>();
-        for (Imagen imagen : detalle.getImagenList()) {
-            Imagen img;
-            if (imagen.getId() != null) {
-                img = detalleOld.getImagenList().stream()
-                        .filter(i -> i.getId().equals(imagen.getId()))
-                        .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Imagen no encontrada: id=" + imagen.getId()));
-                img.setUrl(imagen.getUrl());
-                img.setAlt(imagen.getAlt());
-            } else {
-                img = new Imagen();
-                img.setUrl(imagen.getUrl());
-                img.setAlt(imagen.getAlt());
-                img.setDetalle(detalleOld);
-            }
-            nuevasImagenes.add(img);
-        }
-        detalleOld.getImagenList().clear();
-        detalleOld.getImagenList().addAll(nuevasImagenes);
-
-        if (detalle.getPrecio() != null) {
-            Precio nuevoPrecio = new Precio();
-            nuevoPrecio.setPrecioCompra(detalle.getPrecio().getPrecioCompra());
-            nuevoPrecio.setPrecioVenta(detalle.getPrecio().getPrecioVenta());
-
-            if (detalle.getPrecio().getDescuento() != null &&
-                    detalle.getPrecio().getDescuento().getId() != null) {
-
-                Descuento descuento = descuentoRepository.findById(
-                        detalle.getPrecio().getDescuento().getId()
-                ).orElseThrow(() -> new RuntimeException("Descuento no encontrado"));
-
-                nuevoPrecio.setDescuento(descuento);
-            }
-
-            nuevoPrecio.setDetalle(detalleOld);
-            detalleOld.setPrecio(nuevoPrecio);
+        if (nuevoPrecio != null) {
+            precioExistente.setPrecioCompra(nuevoPrecio.getPrecioCompra());
+            precioExistente.setPrecioVenta(nuevoPrecio.getPrecioVenta());
+            precioExistente.setDescuento(nuevoPrecio.getDescuento());
         }
 
-        return repository.save(detalleOld);
+        return repository.save(existente);
     }
-
-
-
 }

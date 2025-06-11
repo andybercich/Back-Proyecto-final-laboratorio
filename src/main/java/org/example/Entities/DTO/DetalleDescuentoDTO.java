@@ -5,6 +5,7 @@ import jakarta.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.example.Entities.Detalle;
+import org.example.Entities.Precio;
 import org.example.Entities.Producto;
 import org.example.Entities.Talle;
 
@@ -24,6 +25,8 @@ public class DetalleDescuentoDTO {
 
     private Producto producto;
 
+    private PrecioDTO precioDTO;
+
     @OneToMany(mappedBy = "detalle", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<ImagenDTO> imagenList = new ArrayList<>();
 
@@ -36,6 +39,7 @@ public class DetalleDescuentoDTO {
                 detalle.isEstado(),
                 detalle.getColor(),
                 detalle.getProducto(),
+                PrecioDTO.fromEntity(detalle.getPrecio()),
                 ImagenDTO.fromEntitys(detalle.getImagenList()),
                 detalle.getStock()
         );

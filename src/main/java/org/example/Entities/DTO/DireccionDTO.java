@@ -38,4 +38,15 @@ public class DireccionDTO {
                 .map(DireccionDTO::fromEntity)
                 .collect(Collectors.toList());
     }
+
+    public Direccion toEntity() {
+        Direccion direccion = new Direccion();
+        direccion.setId(this.id);
+        direccion.setLocalidad(this.localidad);
+        direccion.setPais(this.pais);
+        direccion.setProvincia(this.provincia);
+        direccion.setDepartamento(this.departamento);
+        direccion.setCodigoPostal(this.codigoPostal);
+        return direccion;
+    }
 }

@@ -13,12 +13,13 @@ import java.util.List;
 @NoArgsConstructor
 public class AuthResponse {
 
+    private Long id;
     private String nombre;
     private String dni;
     private String mail;
     private Rol rol;
     private boolean estado;
-    private List<DireccionDTO> direccion;
+    private List<DireccionDTO> direcciones;
     private String token;
 
 }

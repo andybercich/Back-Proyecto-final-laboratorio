@@ -21,8 +21,6 @@ public class UsuarioDTO {
     private String nombre;
     private String password;
     private String mail;
-
-    @Enumerated(EnumType.STRING)
     private Rol rol;
 
     private String dni;
@@ -31,6 +29,7 @@ public class UsuarioDTO {
     private List<DireccionDTO> direcciones = new ArrayList<>();
 
     public static UsuarioDTO fromEntity(Usuario usuario){
+        if(usuario == null) return null;
         return UsuarioDTO.builder()
                 .id(usuario.getId())
                 .nombre(usuario.getNombre())
@@ -47,6 +46,31 @@ public class UsuarioDTO {
     }
 
     public static List<UsuarioDTO> fromEntitys(List<Usuario> usuarios) {
-        return usuarios.stream().map(UsuarioDTO::fromEntity).collect(Collectors.toList());
+        if(usuarios == null) return new ArrayList<>();
+        return usuarios.stream()
+                .map(UsuarioDTO::fromEntity)
+                .collect(Collectors.toList());
+    }
+
+    public Usuario toEntity() {
+        Usuario usuario = new Usuario();
+        usuario.setId(this.id);
+        usuario.setNombre(this.nombre);
+        usuario.setPassword(this.password);
+        usuario.setMail(this.mail);
+        usuario.setRol(this.rol);
+        usuario.setDni(this.dni);
+
+        if (this.direcciones != null) {
+            usuario.setDirecciones(
+                    this.direcciones.stream()
+                            .map(DireccionDTO::toEntity)
+                            .collect(Collectors.toList())
+            );
+        } else {
+            usuario.setDirecciones(new ArrayList<>());
+        }
+
+        return usuario;
     }
 }

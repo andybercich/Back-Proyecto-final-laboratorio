@@ -27,7 +27,7 @@ public class AuthService {
         Usuario userDetails = usuarioRepository.findByMail(userLogin.getMail()).orElseThrow();
         String token = jwtService.getToken(userDetails);
         System.out.println(token);
-      return new AuthResponse(userDetails.getNombre(), userDetails.getDni(), userDetails.getMail(),
+      return new AuthResponse(userDetails.getId(), userDetails.getNombre(), userDetails.getDni(), userDetails.getMail(),
               userDetails.getRol(), userDetails.isEstado(),
               DireccionDTO.fromEntityList(userDetails.getDirecciones()), token);
     }
@@ -37,6 +37,7 @@ public class AuthService {
         usuario.setRol(Rol.USER);
         usuarioRepository.save(usuario);
         return new AuthResponse(
+                usuario.getId(),
                 usuario.getNombre(),
                 usuario.getDni(),
                 usuario.getMail(),
