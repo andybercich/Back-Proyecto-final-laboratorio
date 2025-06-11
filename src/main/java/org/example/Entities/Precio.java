@@ -31,7 +31,6 @@ public class Precio extends Base{
     private BigDecimal precioVenta;
 
     @OneToOne(mappedBy = "precio")
-    @NotNull
     private Detalle detalle;
 
 }

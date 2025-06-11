@@ -29,6 +29,7 @@ public class DataInitializer implements CommandLineRunner {
     @Override
     @Transactional
     public void run(String... args) throws Exception {
+        /*
         // Crear categoría
         Categoria categoria = new Categoria();
         categoria.setNombre("Ropa deportiva");
@@ -119,6 +120,6 @@ public class DataInitializer implements CommandLineRunner {
         detalleOrden.setSubtotal(BigDecimal.valueOf(13000 * 2));
         entityManager.persist(detalleOrden);
 
-        orden.setDetalles(List.of(detalleOrden));
+        orden.setDetalles(List.of(detalleOrden));*/
     }
 }

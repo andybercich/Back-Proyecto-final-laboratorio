@@ -113,8 +113,9 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }
     }
 
-    @PostMapping("/post")
-    public ResponseEntity<?> postDetalle (@RequestBody Detalle detalle){
+    @Override
+    @PostMapping
+    public ResponseEntity<?> create (@RequestBody Detalle detalle){
         try {
 
             Detalle detalle1= service.save(detalle);

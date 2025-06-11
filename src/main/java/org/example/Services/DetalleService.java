@@ -114,14 +114,9 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
         try{
 
             Precio precio = detalle.getPrecio();
-
             precio.setDetalle(detalle);
             precioRepository.save(precio);
-            detalle.setPrecio(precio);
-
             return repository.save(detalle);
-
-
 
         }catch (Exception e){
             throw new RuntimeException("No se pudo crear el nuevo detalle: "+e.getMessage());
