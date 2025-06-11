@@ -21,7 +21,7 @@ import java.math.BigDecimal;
 @EqualsAndHashCode(callSuper = true)
 public class Precio extends Base{
 
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "descuento_id")
     private Descuento descuento;
 

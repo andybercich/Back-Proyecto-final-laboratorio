@@ -19,7 +19,6 @@ public class OrdenCompraDTO {
     private boolean estado;
     private UsuarioDTO usuario;
     private BigDecimal total;
-    private double descuento;
     private LocalDate fecha;
     private DireccionDTO direccion;
     private boolean direccionUsuario;
