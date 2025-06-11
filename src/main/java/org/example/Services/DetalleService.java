@@ -3,15 +3,11 @@ package org.example.Services;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import jakarta.persistence.criteria.*;
+import org.example.Entities.*;
 import org.example.Entities.DTO.DetalleDTO;
-import org.example.Entities.Detalle;
 import org.example.Entities.Enum.Sexo;
 import org.example.Entities.Enum.TipoProducto;
-import org.example.Entities.Imagen;
-import org.example.Entities.Precio;
-import org.example.Repositories.DetalleRepository;
-import org.example.Repositories.PrecioRepository;
-import org.example.Repositories.TalleRepository;
+import org.example.Repositories.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +26,13 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
     private TalleRepository talleRepository;
 
     @Autowired
+    private ProductoRepository productoRepository;
+
+    @Autowired
     private PrecioRepository precioRepository;
+
+    @Autowired
+    private DescuentoRepository descuentoRepository;
 
     public List<Detalle> findAllDetalleByIdProducto (Long id){
         try{
@@ -127,43 +129,65 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
     }
 
     @Transactional
-    public Detalle updateDetalle(Detalle detalle) {
-        Detalle detalleOld = repository.findById(detalle.getId())
+    public Detalle updateDetalle(Detalle detalle, Long id) {
+        Detalle detalleOld = repository.findById(id)
                 .orElseThrow(() -> new RuntimeException("Detalle no encontrado"));
 
         detalleOld.setColor(detalle.getColor());
         detalleOld.setEstado(detalle.isEstado());
         detalleOld.setStock(detalle.getStock());
-        detalleOld.setTalle(
-                talleRepository.findById(detalle.getTalle().getId())
-                        .orElseThrow(() -> new RuntimeException("Talle no encontrado"))
-        );
 
-        List<Imagen> imagenesActualizadas = new ArrayList<>();
+        Talle talle = talleRepository.findById(detalle.getTalle().getId())
+                .orElseThrow(() -> new RuntimeException("Talle no encontrado"));
+        detalleOld.setTalle(talle);
 
-        for (Imagen nuevaImagen : detalle.getImagenList()) {
-            if (nuevaImagen.getId() != null) {
-                Imagen existente = detalleOld.getImagenList().stream()
-                        .filter(i -> i.getId().equals(nuevaImagen.getId()))
+        Producto producto = productoRepository.findById(detalle.getProducto().getId())
+                .orElseThrow(() -> new RuntimeException("Producto no encontrado"));
+        detalleOld.setProducto(producto);
+
+        List<Imagen> nuevasImagenes = new ArrayList<>();
+        for (Imagen imagen : detalle.getImagenList()) {
+            Imagen img;
+            if (imagen.getId() != null) {
+                img = detalleOld.getImagenList().stream()
+                        .filter(i -> i.getId().equals(imagen.getId()))
                         .findFirst()
-                        .orElseThrow(() -> new RuntimeException("Imagen no encontrada: id=" + nuevaImagen.getId()));
-                existente.setUrl(nuevaImagen.getUrl());
-                existente.setAlt(nuevaImagen.getAlt());
-                imagenesActualizadas.add(existente);
+                        .orElseThrow(() -> new RuntimeException("Imagen no encontrada: id=" + imagen.getId()));
+                img.setUrl(imagen.getUrl());
+                img.setAlt(imagen.getAlt());
             } else {
-                Imagen nueva = new Imagen();
-                nueva.setUrl(nuevaImagen.getUrl());
-                nueva.setAlt(nuevaImagen.getAlt());
-                nueva.setDetalle(detalleOld);
-                imagenesActualizadas.add(nueva);
+                img = new Imagen();
+                img.setUrl(imagen.getUrl());
+                img.setAlt(imagen.getAlt());
+                img.setDetalle(detalleOld);
             }
+            nuevasImagenes.add(img);
         }
-
         detalleOld.getImagenList().clear();
-        detalleOld.getImagenList().addAll(imagenesActualizadas);
+        detalleOld.getImagenList().addAll(nuevasImagenes);
+
+        if (detalle.getPrecio() != null) {
+            Precio nuevoPrecio = new Precio();
+            nuevoPrecio.setPrecioCompra(detalle.getPrecio().getPrecioCompra());
+            nuevoPrecio.setPrecioVenta(detalle.getPrecio().getPrecioVenta());
+
+            if (detalle.getPrecio().getDescuento() != null &&
+                    detalle.getPrecio().getDescuento().getId() != null) {
+
+                Descuento descuento = descuentoRepository.findById(
+                        detalle.getPrecio().getDescuento().getId()
+                ).orElseThrow(() -> new RuntimeException("Descuento no encontrado"));
+
+                nuevoPrecio.setDescuento(descuento);
+            }
+
+            nuevoPrecio.setDetalle(detalleOld);
+            detalleOld.setPrecio(nuevoPrecio);
+        }
 
         return repository.save(detalleOld);
     }
+
 
 
 }

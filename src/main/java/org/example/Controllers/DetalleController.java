@@ -101,17 +101,15 @@ public class DetalleController extends BaseController<Detalle,Long, DetalleRepos
         }
     }
 
-    //Body con el arreglo de las imagenes va este
-    @PutMapping("/update")
-    public ResponseEntity<?> updateDetalle (@RequestBody Detalle detalle){
-        try {
 
-            Detalle detalle1= service.updateDetalle(detalle);
-            return ResponseEntity.ok(DetalleDTO.fromEntity(detalle1));
 
+    @Override
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody Detalle detalle){
+        try{
+            return ResponseEntity.ok(DetalleDTO.fromEntity(service.updateDetalle(detalle, id)));
         }catch (Exception e){
-
-            return  ResponseEntity.internalServerError().body("Error: "+e.getMessage());
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 
