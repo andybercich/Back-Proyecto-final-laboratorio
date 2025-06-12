@@ -14,7 +14,6 @@ import java.util.stream.Collectors;
 public class OrdenCompraDetalleDTO {
     private Long id;
     private boolean estado;
-    private OrdenCompraDTO ordenCompra;
     private DetalleDTO detalle;
     private int cantidad;
 
@@ -22,7 +21,6 @@ public class OrdenCompraDetalleDTO {
         return OrdenCompraDetalleDTO.builder()
                 .id(ordenCompraDetalle.getId())
                 .estado(ordenCompraDetalle.isEstado())
-                .ordenCompra(OrdenCompraDTO.fromEntity(ordenCompraDetalle.getOrdenCompra()))
                 .detalle(DetalleDTO.fromEntity(ordenCompraDetalle.getDetalle()))
                 .cantidad(ordenCompraDetalle.getCantidad())
                 .build();

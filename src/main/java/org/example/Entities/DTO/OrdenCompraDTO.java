@@ -22,6 +22,7 @@ public class OrdenCompraDTO {
     private LocalDate fecha;
     private DireccionDTO direccion;
     private boolean direccionUsuario;
+    private List<OrdenCompraDetalleDTO> ordenCompraDetalles;
 
     public static OrdenCompraDTO fromEntity(OrdenCompra ordenCompra) {
         return OrdenCompraDTO.builder()
@@ -31,6 +32,7 @@ public class OrdenCompraDTO {
                 .total(ordenCompra.getTotal())
                 .fecha(ordenCompra.getFecha())
                 .direccion(DireccionDTO.fromEntity(ordenCompra.getDireccion()))
+                .ordenCompraDetalles(OrdenCompraDetalleDTO.fromEntities(ordenCompra.getDetalles()))
                 .direccionUsuario(ordenCompra.isDireccionUsuario())
                 .build();
     }

@@ -33,13 +33,14 @@ public class DireccionService extends BaseService<Direccion, Long, DireccionRepo
             throw new Exception(e.getMessage());
         }
     }
+
     public Direccion saveToken(Direccion entity) {
         try {
             Usuario user = usuarioRepository.findByMail(
                     SecurityContextHolder.getContext().getAuthentication().getName()
             ).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
-            // Ignorar cualquier usuario que venga del frontend
+
             entity.setUsuarios(new ArrayList<>());
             entity.getUsuarios().add(user);
 

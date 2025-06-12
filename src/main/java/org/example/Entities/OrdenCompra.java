@@ -26,7 +26,6 @@ public class OrdenCompra extends Base{
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
-    @NotNull(message = "La orden compra debe estar relacionada con un usuario")
     private Usuario usuario;
 
     private BigDecimal total;
@@ -41,8 +40,24 @@ public class OrdenCompra extends Base{
     @NotNull(message = "Determina si se usará la direccion del usuario o no")
     private boolean direccionUsuario;
 
+    @OneToMany(mappedBy = "ordenCompra", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<OrdenCompraDetalle> detalles = new ArrayList<>();
+
     public void setTime (){
         this.fecha = LocalDate.now();
     }
 
+
+    public void setDetalles(List<OrdenCompraDetalle> nuevosDetalles) {
+        this.detalles.clear();
+        if (nuevosDetalles != null) {
+            this.detalles.addAll(nuevosDetalles);
+        }
+    }
+
+    public void calcularTotal() {
+        this.total = detalles.stream()
+                .map(OrdenCompraDetalle::getSubtotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
 }

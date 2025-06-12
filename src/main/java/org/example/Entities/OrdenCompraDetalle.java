@@ -33,4 +33,24 @@ public class OrdenCompraDetalle extends Base{
 
     private int cantidad;
 
+    public void calcularSubtotal() {
+        BigDecimal precioUnitario = detalle.getPrecio().getPrecioVenta();
+        Descuento descuento = detalle.getPrecio().getDescuento();
+
+        if (descuento != null && descuentoVigente(descuento)) {
+            BigDecimal porcentaje = BigDecimal.valueOf(descuento.getDescuento());
+            BigDecimal descuentoAplicado = precioUnitario.multiply(porcentaje).divide(BigDecimal.valueOf(100));
+            precioUnitario = precioUnitario.subtract(descuentoAplicado);
+        }
+
+        this.subtotal = precioUnitario.multiply(BigDecimal.valueOf(cantidad));
+    }
+
+    private boolean descuentoVigente(Descuento descuento) {
+        LocalDate hoy = LocalDate.now();
+        return (descuento.getFechaInicio() == null || !hoy.isBefore(descuento.getFechaInicio())) &&
+                (descuento.getFechaFin() == null || !hoy.isAfter(descuento.getFechaFin()));
+    }
+
+
 }

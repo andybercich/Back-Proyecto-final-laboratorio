@@ -29,30 +29,25 @@ public class OrdenCompraController extends BaseController<OrdenCompra,Long, Orde
         }
     }
 
+    @GetMapping("/{id}")
+    @Override
+    public ResponseEntity<?> findById(@PathVariable Long id) {
+        try{
+            OrdenCompra ordenesCompras = service.findById(id);
+            return ResponseEntity.ok(OrdenCompraDTO.fromEntity(ordenesCompras));
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
     @PostMapping("/post")
-    public ResponseEntity<OrdenCompraPostDTO> crearOrdenCompra(@RequestBody OrdenCompraPostDTO ordenCompraDTO) throws Exception {
-        // Convertir DTO a entidad
-        OrdenCompra ordenCompra = convertirDtoAEntidad(ordenCompraDTO);
+    public ResponseEntity<OrdenCompraPostDTO> crearOrdenCompra(@RequestBody OrdenCompra ordenCompraDTO) throws Exception {
 
-        // Guardar la entidad
-        OrdenCompra nuevaOrden = service.save(ordenCompra);
 
-        // Convertir entidad guardada a DTO para devolverla
+        OrdenCompra nuevaOrden = service.save(ordenCompraDTO);
         OrdenCompraPostDTO respuestaDTO = OrdenCompraPostDTO.fromEntity(nuevaOrden);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(respuestaDTO);
     }
 
-    // Método auxiliar para convertir DTO a entidad (simplificado)
-    private OrdenCompra convertirDtoAEntidad(OrdenCompraPostDTO dto) {
-        OrdenCompra orden = new OrdenCompra();
-        orden.setId(dto.getId());
-        orden.setEstado(dto.isEstado());
-        orden.setDireccion(dto.getDireccion() != null ? dto.getDireccion().toEntity() : null);
-        orden.setUsuario(dto.getUsuario() != null ? dto.getUsuario().toEntity() : null);
-        orden.setDireccionUsuario(dto.isDireccionUsuario());
-        orden.setTotal(dto.getTotal());
-        orden.setFecha(dto.getFecha());
-        return orden;
-    }
 }
