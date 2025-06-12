@@ -17,6 +17,7 @@ public class OrdenCompraDetalleDTO {
     private DetalleDTO detalle;
     private int cantidad;
 
+
     public static OrdenCompraDetalleDTO fromEntity(OrdenCompraDetalle ordenCompraDetalle){
         return OrdenCompraDetalleDTO.builder()
                 .id(ordenCompraDetalle.getId())

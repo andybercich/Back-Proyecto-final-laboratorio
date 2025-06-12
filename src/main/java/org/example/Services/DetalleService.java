@@ -16,6 +16,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DetalleService extends BaseService<Detalle, Long, DetalleRepository> {
@@ -101,10 +102,13 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
 
         cq.select(detalle).where(predicates.toArray(new Predicate[0]));
 
-        // Agrupar por producto.id para que haya un solo detalle por producto
-        cq.groupBy(detalle.get("producto").get("id"));
-
-        return entityManager.createQuery(cq).getResultList()
+        return entityManager.createQuery(cq).getResultList().stream()
+                .collect(Collectors.toMap(
+                        d -> d.getProducto().getId(),  // clave: id de producto
+                        d -> d,                        // valor: el primer detalle encontrado
+                        (d1, d2) -> d1                // en caso de conflicto, conservar el primero
+                ))
+                .values()
                 .stream()
                 .map(DetalleDTO::fromEntity)
                 .toList();
