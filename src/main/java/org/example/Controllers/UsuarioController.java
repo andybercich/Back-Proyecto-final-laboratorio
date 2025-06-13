@@ -33,6 +33,27 @@ public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepos
         }
     }*/
 
+    @PostMapping("/admin")
+    public ResponseEntity<?> postAdmin(@RequestBody Usuario usuario){
+        try {
+
+            AuthResponse usuario1 = service.postUsuarioAdmin(usuario);
+            return ResponseEntity.ok(usuario1);
+        }catch (Exception e){
+            return  ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+    @GetMapping("/admin")
+    public ResponseEntity<?> getAdmin(){
+        try {
+            List<Usuario> usuario1 = service.getAdmins();
+            return ResponseEntity.ok(UsuarioDTO.fromEntitys(usuario1));
+        }catch (Exception e){
+            return  ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
     @GetMapping("/get")
     public ResponseEntity<List<UsuarioDTO>> getAllUsuario(){
         try{
@@ -56,7 +77,13 @@ public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepos
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody UserLogin userLogin){
         try {
-            return ResponseEntity.ok(authService.login(userLogin));
+            AuthResponse authResponse = authService.login(userLogin);
+            if (!authResponse.isEstado()){
+                return ResponseEntity.notFound().build();
+            }else{
+                return ResponseEntity.ok(authService.login(userLogin));
+            }
+
         } catch (Exception e) {
             return ResponseEntity.status(404).body("DATOS INVALIDOS: " + e.getMessage());
         }

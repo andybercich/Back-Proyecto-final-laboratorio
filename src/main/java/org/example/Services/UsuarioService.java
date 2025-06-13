@@ -1,26 +1,71 @@
 package org.example.Services;
 
-import org.example.Entities.Direccion;
-import org.example.Entities.UpdateUser;
-import org.example.Entities.UserLogin;
-import org.example.Entities.Usuario;
+import org.example.Entities.*;
+import org.example.Entities.Enum.Rol;
+import org.example.JWT.AuthService;
 import org.example.JWT.JwtService;
 import org.example.Repositories.DireccionRepository;
 import org.example.Repositories.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class UsuarioService extends BaseService<Usuario,Long, UsuarioRepository>{
+
+    @Autowired
+    private AuthService authService;
 
     @Autowired
     private JwtService serviceJWT;
 
     @Autowired
     private DireccionRepository direccionRepository;
+
+    public AuthResponse postUsuarioAdmin(Usuario usuario){
+        try {
+            Usuario user = repository.findByMail(
+                    SecurityContextHolder.getContext().getAuthentication().getName()
+            ).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            if (user.getRol() == Rol.ADMIN){
+
+                return authService.registrar(usuario);
+
+
+            }else{
+                throw new RuntimeException("USUARIO NO AUTORIZADO PARA CREAR ADMINS");
+            }
+
+
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    public List<Usuario> getAdmins(){
+        try {
+            Usuario user = repository.findByMail(
+                    SecurityContextHolder.getContext().getAuthentication().getName()
+            ).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+            if (user.getRol() == Rol.ADMIN){
+
+                return repository.findAllByRol(Rol.ADMIN).stream()
+                        .filter(u -> !u.getMail().equalsIgnoreCase(user.getMail()))
+                        .collect(Collectors.toList());
+
+            }else{
+                throw new RuntimeException("USUARIO NO AUTORIZADO PARA CREAR ADMINS");
+            }
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
 
     public Usuario postUsuario(Usuario usuario){
         try{

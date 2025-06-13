@@ -1,6 +1,5 @@
 package org.example.Config;
 
-
 import lombok.RequiredArgsConstructor;
 import org.example.JWT.JWTAuthenticationFilter;
 import org.springframework.context.annotation.Bean;
@@ -36,8 +35,52 @@ public class SecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/sneaks/imagen/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/detalle/**").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/sneaks/descuento/**").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/sneaks/producto/**").permitAll()
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/categoria/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/categoria/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/categoria/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/talle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/talle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/talle/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/precio/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/precio/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/precio/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/imagen/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/imagen/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/imagen/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/detalle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/detalle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/detalle/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/descuento/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/descuento/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/descuento/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.POST, "/sneaks/producto/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/producto/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/producto/**").hasAuthority("ADMIN")
+
+                                .requestMatchers(HttpMethod.GET, "/sneaks/ordenCompra/**").authenticated()
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/ordenCompra/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/ordenCompra/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.PUT, "/sneaks/ordenCompraDetalle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.DELETE, "/sneaks/ordenCompraDetalle/**").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/sneaks/ordenCompraDetalle").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/sneaks/ordenCompra").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/sneaks/usuario").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/sneaks/direccion").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.POST, "/sneaks/usuario/admin").hasAuthority("ADMIN")
+                                .requestMatchers(HttpMethod.GET, "/sneaks/usuario/admin").hasAuthority("ADMIN")
+
+
                                 .anyRequest().authenticated()
-                ).sessionManagement(session ->
+                )
+                .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 )
                 .authenticationProvider(authenticationProvider)

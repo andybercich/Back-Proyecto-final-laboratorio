@@ -1,7 +1,9 @@
 package org.example.Controllers;
 
+import org.example.Entities.DTO.DireccionDTO;
 import org.example.Entities.DTO.OrdenCompraDTO;
 import org.example.Entities.DTO.OrdenCompraPostDTO;
+import org.example.Entities.Direccion;
 import org.example.Entities.OrdenCompra;
 import org.example.Repositories.OrdenCompraRepository;
 import org.example.Services.OrdenCompraService;
@@ -19,6 +21,20 @@ public class OrdenCompraController extends BaseController<OrdenCompra,Long, Orde
         super(service);
     }
 
+    @GetMapping()
+    @Override
+    public ResponseEntity<?> findAll(){
+        try {
+
+            return ResponseEntity.ok(OrdenCompraDTO.fromEntities(service.getOrdenesUser()));
+
+
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
+        }
+    }
+
+
     @GetMapping("/get")
     public ResponseEntity<List<OrdenCompraDTO>> getAllOrdenCompra() {
         try{
@@ -26,6 +42,18 @@ public class OrdenCompraController extends BaseController<OrdenCompra,Long, Orde
             return ResponseEntity.ok(OrdenCompraDTO.fromEntities(ordenesCompras));
         }catch (Exception e){
             throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody OrdenCompra ordenCompra){
+        try {
+
+            OrdenCompraDTO dto = OrdenCompraDTO.fromEntity(service.update(id, ordenCompra));
+            return ResponseEntity.ok(dto);
+
+        }catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 

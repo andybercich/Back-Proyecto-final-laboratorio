@@ -11,10 +11,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.stereotype.Component;
+import org.springframework.util.AntPathMatcher;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
+
 import org.springframework.http.HttpHeaders;
 
 @Component
@@ -23,6 +26,31 @@ public class JWTAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtService jwtService;
     private final UserDetailsService userDetailsService;
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) {
+        AntPathMatcher pathMatcher = new AntPathMatcher();
+        String path = request.getRequestURI();
+
+        // Si es GET y coincide con alguna ruta pública, no aplicar filtro
+        if ("GET".equalsIgnoreCase(request.getMethod())) {
+            return List.of(
+                    "/sneaks/detalle/**",
+                    "/sneaks/categoria/**",
+                    "/sneaks/talle/**",
+                    "/sneaks/precio/**",
+                    "/sneaks/imagen/**",
+                    "/sneaks/descuento/**",
+                    "/sneaks/producto/**",
+                    "/swagger-ui/**",
+                    "/v3/api-docs/**"
+            ).stream().anyMatch(pattern -> pathMatcher.match(pattern, path));
+        }
+
+        // Para POST/PUT/DELETE/etc. que coincidan, sí aplica el filtro
+        return false;
+    }
+
 
 
     @Override

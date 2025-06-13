@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -88,7 +89,20 @@ public class OrdenCompraService extends BaseService<OrdenCompra, Long, OrdenComp
         }
     }
 
+    @Transactional
+    public List<OrdenCompra> getOrdenesUser(){
+        try {
+            Usuario user = usuarioRepository.findByMail(
+                    SecurityContextHolder.getContext().getAuthentication().getName()
+            ).orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
 
+            return repository.findByUsuarioId(user.getId());
+
+
+        }catch (Exception e){
+            throw new RuntimeException(e.getMessage());
+        }
+    }
     @Override
     @Transactional
     public OrdenCompra update(Long id, OrdenCompra actualizada) {
@@ -121,9 +135,16 @@ public class OrdenCompraService extends BaseService<OrdenCompra, Long, OrdenComp
                 ordenCompraDetalleService.save(nuevo);
             }
 
-            existente.setUsuario(actualizada.getUsuario());
-            existente.setDireccion(actualizada.getDireccion());
-            existente.setDireccionUsuario(actualizada.isDireccionUsuario());
+            if (!actualizada.isDireccionUsuario()){
+
+                existente.setDireccion(direccionService.saveAdmin(actualizada.getDireccion(),
+                        actualizada.getUsuario().getId()));
+                existente.setDireccionUsuario(false);
+            }else{
+                existente.setDireccion(existente.getDireccion());
+                existente.setDireccionUsuario(true);
+            }
+
             existente.setDetalles(actualizada.getDetalles());
             existente.setTime();
             existente.calcularTotal();

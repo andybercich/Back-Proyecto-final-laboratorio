@@ -34,6 +34,26 @@ public class DireccionService extends BaseService<Direccion, Long, DireccionRepo
         }
     }
 
+    public Direccion saveAdmin(Direccion direccion, Long id) {
+        try {
+
+            Usuario user = usuarioRepository.findById(id)
+                    .orElseThrow(() -> new RuntimeException("Usuario no encontrado con id: " + id));
+
+            direccion.setUsuarios(new ArrayList<>());
+            direccion.getUsuarios().add(user);
+
+            user.getDirecciones().add(direccion);
+
+            repository.save(direccion);
+            usuarioRepository.save(user);
+
+            return direccion;
+        } catch (Exception e) {
+            throw new RuntimeException("No se pudo crear la dirección: " + e.getMessage());
+        }
+    }
+
     public Direccion saveToken(Direccion entity) {
         try {
             Usuario user = usuarioRepository.findByMail(
