@@ -67,6 +67,7 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
         Root<Detalle> detalle = cq.from(Detalle.class);
         Join<Object, Object> producto = detalle.join("producto");
         Join<Object, Object> precio = detalle.join("precio", JoinType.INNER);
+        Join<Object, Object> categoriaJoin = producto.join("categoria");
 
         List<Predicate> predicates = new ArrayList<>();
 
@@ -83,7 +84,7 @@ public class DetalleService extends BaseService<Detalle, Long, DetalleRepository
             predicates.add(cb.equal(detalle.get("talle").get("id"), idTalle));
 
         if (categoria != null)
-            predicates.add(cb.equal(producto.get("categoria"), categoria));
+            predicates.add(cb.equal(categoriaJoin.get("nombre"), categoria));
 
         if (fechaDescuento != null) {
             LocalDate fecha = LocalDate.parse(fechaDescuento);

@@ -1,9 +1,6 @@
 package org.example.Entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -23,6 +20,7 @@ import org.example.Entities.Enum.TipoProducto;
 @EqualsAndHashCode(callSuper = true)
 public class Producto extends Base{
 
+    @ManyToOne(fetch = FetchType.LAZY)
     @NotNull(message = "Ingresa una categoria valida para el producto")
     private Categoria categoria;
 

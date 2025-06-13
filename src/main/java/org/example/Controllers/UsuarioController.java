@@ -34,13 +34,20 @@ public class UsuarioController extends BaseController<Usuario,Long, UsuarioRepos
     }*/
 
     @PostMapping("/admin")
-    public ResponseEntity<?> postAdmin(@RequestBody Usuario usuario){
+    public ResponseEntity<?> postAdmin(@RequestBody UsuarioDTO dto){
         try {
+            Usuario usuario = new Usuario();
+            usuario.setNombre(dto.getNombre());
+            usuario.setMail(dto.getMail());
+            usuario.setDni(dto.getDni());
+            usuario.setPassword(dto.getPassword());
+            usuario.setRol(dto.getRol()); // <-- aquí se respeta
+            usuario.setEstado(dto.isEstado());
 
             AuthResponse usuario1 = service.postUsuarioAdmin(usuario);
             return ResponseEntity.ok(usuario1);
-        }catch (Exception e){
-            return  ResponseEntity.internalServerError().body(e.getMessage());
+        } catch (Exception e){
+            return ResponseEntity.internalServerError().body(e.getMessage());
         }
     }
 

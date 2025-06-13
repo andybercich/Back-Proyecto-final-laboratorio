@@ -34,7 +34,6 @@ public class AuthService {
 
     public AuthResponse registrar(Usuario usuario) {
         usuario.setPassword(passwordEncoder.encode(usuario.getPassword()));
-        usuario.setRol(Rol.USER);
         usuarioRepository.save(usuario);
         return new AuthResponse(
                 usuario.getId(),

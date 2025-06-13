@@ -22,6 +22,7 @@ public class UsuarioDTO {
     private String password;
     private String mail;
     private Rol rol;
+    private boolean estado;
 
     private String dni;
 
@@ -37,6 +38,7 @@ public class UsuarioDTO {
                 .mail(usuario.getMail())
                 .rol(usuario.getRol())
                 .dni(usuario.getDni())
+                .estado(usuario.isEstado())
                 .direcciones(
                         usuario.getDirecciones().stream()
                                 .map(DireccionDTO::fromEntity)
@@ -60,6 +62,7 @@ public class UsuarioDTO {
         usuario.setMail(this.mail);
         usuario.setRol(this.rol);
         usuario.setDni(this.dni);
+        usuario.setEstado(this.isEstado());
 
         if (this.direcciones != null) {
             usuario.setDirecciones(
