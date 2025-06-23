@@ -30,7 +30,6 @@ public class MercadoPagoController {
             PreferenciaResponse preference = mercadoPagoService.crearPreferencia(request);
             String initPoint = preference.getInitPoint();
 
-            // Retornás el URL para que el front lo use y abra Mercado Pago
             return ResponseEntity.ok(Map.of("init_point", initPoint, "Referencia", preference.getExternalReference()));
         } catch (Exception e) {
             e.printStackTrace();

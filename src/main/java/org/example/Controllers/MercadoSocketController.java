@@ -36,15 +36,12 @@ public class MercadoSocketController {
         if ("payment".equals(tipo)) {
             String estadoPago = consultarEstadoPago(id);
             if ("approved".equalsIgnoreCase(estadoPago)) {
-                // Obtengo la preferencia / referencia externa asociada al pago
-                String referenciaExterna = obtenerReferenciaPorPagoId(id); // Implementa este método para obtener la referencia
+                String referenciaExterna = obtenerReferenciaPorPagoId(id);
 
-                // Envío por WS la confirmación con la referencia
                 socketHandler.enviarConfirmacionPago(
                         "{\"evento\":\"pago_confirmado\", \"estado\":true, \"referencia\":\"" + referenciaExterna + "\"}"
                 );
                 System.out.println(referenciaExterna);
-                // Retorno la referencia para quien consulte el webhook (opcional)
                 return ResponseEntity.ok(Map.of("referencia", referenciaExterna));
 
             }
