@@ -1,9 +1,13 @@
 package org.example.Services;
 import com.mercadopago.MercadoPagoConfig;
+import com.mercadopago.client.preference.PreferenceBackUrlsRequest;
 import com.mercadopago.client.preference.PreferenceClient;
 import com.mercadopago.client.preference.PreferenceItemRequest;
 import com.mercadopago.client.preference.PreferenceRequest;
+import com.mercadopago.exceptions.MPApiException;
 import com.mercadopago.resources.preference.Preference;
+import com.mercadopago.resources.preference.PreferenceBackUrls;
+import org.example.Entities.BackUrl;
 import org.example.Entities.DTO.PreferenciaResponse;
 import org.example.Entities.OrdenCompra;
 import org.example.Entities.OrdenCompraDetalle;
@@ -25,36 +29,47 @@ public class MercadoPagoService {
     @Autowired
     private DetalleRepository detalleRepository;
     public PreferenciaResponse crearPreferencia(OrdenCompra ordenCompra) throws Exception {
-        MercadoPagoConfig.setAccessToken(accessToken);
+        try{
 
-        List<OrdenCompraDetalle> detalles = ordenCompra.getDetalles();
-        detalles.forEach(detalle -> {
-            detalle.setDetalle(detalleRepository.getReferenceById(detalle.getDetalle().getId()));
-        });
-        detalles.forEach(OrdenCompraDetalle::calcularSubtotal);
+            MercadoPagoConfig.setAccessToken(accessToken);
 
-        List<PreferenceItemRequest> items = detalles.stream()
-                .map(detalle -> PreferenceItemRequest.builder()
-                        .title(detalle.getDetalle().getProducto().getNombre())
-                        .description("Talle: " + detalle.getDetalle().getTalle().getTalle() +
-                                " Color: " + detalle.getDetalle().getColor())
-                        .quantity(detalle.getCantidad())
-                        .unitPrice(detalle.getSubtotal())
-                        .currencyId("ARS")
-                        .build())
-                .toList();
+            List<OrdenCompraDetalle> detalles = ordenCompra.getDetalles();
+            detalles.forEach(detalle -> {
+                detalle.setDetalle(detalleRepository.getReferenceById(detalle.getDetalle().getId()));
+            });
+            detalles.forEach(OrdenCompraDetalle::calcularSubtotal);
 
-        String referenciaExterna = UUID.randomUUID().toString();
-        String notificationUrl = "https://great-bags-flow.loca.lt/webhook/mercado-pago";
-        PreferenceRequest preferenceRequest = PreferenceRequest.builder()
-                .items(items)
-                .externalReference(referenciaExterna)
-                .notificationUrl(notificationUrl)
-                .build();
+            List<PreferenceItemRequest> items = detalles.stream()
+                    .map(detalle -> PreferenceItemRequest.builder()
+                            .title(detalle.getDetalle().getProducto().getNombre())
+                            .description("Talle: " + detalle.getDetalle().getTalle().getTalle() +
+                                    " Color: " + detalle.getDetalle().getColor())
+                            .quantity(detalle.getCantidad())
+                            .unitPrice(detalle.getDetalle().calcularTotal())
+                            .currencyId("ARS")
+                            .build())
+                    .toList();
 
-        PreferenceClient client = new PreferenceClient();
-        Preference preference = client.create(preferenceRequest);
+            String referenciaExterna = UUID.randomUUID().toString();
+            PreferenceRequest preferenceRequest = PreferenceRequest.builder()
+                    .items(items)
+                    .externalReference(referenciaExterna)
+                    .backUrls(PreferenceBackUrlsRequest.builder()
+                            .success("https://f318-186-122-2-175.ngrok-free.app/confirmacionPago")
+                            .failure("http://f318-186-122-2-175.ngrok-free.app/confirmacionPago")
+                            .pending("http://f318-186-122-2-175.ngrok-free.app/confirmacionPago")
+                            .build())
+                    .autoReturn("approved")
+                    .build();
+            System.out.println(preferenceRequest);
 
-        return new PreferenciaResponse(preference.getInitPoint(), referenciaExterna);
+            PreferenceClient client = new PreferenceClient();
+            Preference preference = client.create(preferenceRequest);
+            System.out.println(preference);
+            return new PreferenciaResponse(preference.getInitPoint(), referenciaExterna);
+        }catch (MPApiException e) {
+            System.err.println("Error de MP: " + e.getApiResponse().getContent());
+            throw e;
+        }
     }
 }

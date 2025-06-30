@@ -13,6 +13,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 @Entity
 @Table(name = "Descuento")
@@ -33,5 +34,13 @@ public class Descuento extends Base{
 
     @NotNull(message = "Ingresa un porcentaje del descuento")
     private double descuento;
+
+    public boolean isValid  (){
+        if (LocalDate.now().isAfter(this.fechaInicio) && LocalDate.now().isBefore(this.fechaFin)){
+            return true;
+        }else {
+            return false;
+        }
+    }
 
 }

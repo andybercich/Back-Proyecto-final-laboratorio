@@ -8,6 +8,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,4 +49,18 @@ public class Detalle extends Base{
     @JoinColumn(name = "precio_id")
     @NotNull
     private Precio precio;
+
+    public BigDecimal calcularTotal(){
+        BigDecimal precioUnitario = this.precio.getPrecioVenta();
+        Descuento descuento = getPrecio().getDescuento();
+
+        if (descuento != null && descuento.isValid()) {
+            BigDecimal porcentaje = BigDecimal.valueOf(descuento.getDescuento());
+            BigDecimal descuentoAplicado = precioUnitario.multiply(porcentaje).divide(BigDecimal.valueOf(100));
+            precioUnitario = precioUnitario.subtract(descuentoAplicado);
+
+        }
+        return precioUnitario;
+
+    }
 }
