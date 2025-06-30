@@ -57,7 +57,4 @@ public class MercadoPagoService {
 
         return new PreferenciaResponse(preference.getInitPoint(), referenciaExterna);
     }
-
-
-
 }
