@@ -55,9 +55,9 @@ public class MercadoPagoService {
                     .items(items)
                     .externalReference(referenciaExterna)
                     .backUrls(PreferenceBackUrlsRequest.builder()
-                            .success("https://f318-186-122-2-175.ngrok-free.app/confirmacionPago")
-                            .failure("http://f318-186-122-2-175.ngrok-free.app/confirmacionPago")
-                            .pending("http://f318-186-122-2-175.ngrok-free.app/confirmacionPago")
+                            .success("https://c1c7-191-81-200-2.ngrok-free.app/confirmacionPago")
+                            .failure("https://c1c7-191-81-200-2.ngrok-free.app/confirmacionPago")
+                            .pending("https://c1c7-191-81-200-2.ngrok-free.app/confirmacionPago")
                             .build())
                     .autoReturn("approved")
                     .build();
